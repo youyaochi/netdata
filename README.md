@@ -225,6 +225,10 @@ In addition to the above requirements and limitations, monitoring the complete n
 
 See the following link for more details: [network interfaces missing when mounting proc inside a container](https://github.com/docker/docker/issues/13398)
 
+# Mode
+Pass environment variable `NETDATA_MODE`(`COLLECTOR`, `PROXY` or `CENTRAL`) to set as master or slaves.  
+Ref: [Replication Overview](https://github.com/firehol/netdata/wiki/Replication-Overview)
+
 ## Work-around
 
 I provided a script called `fakenet.sh` which provides a copy of the `/proc/net` filesystem. You should start this script before you start the netdata container. You can do it like this:
