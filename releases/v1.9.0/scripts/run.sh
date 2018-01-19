@@ -99,9 +99,9 @@ elif [ "$NETDATA_MODE" = "CENTRAL" ]; then
 	echo "Setting central mode."
 	cat << EOF > /etc/netdata/netdata.conf
 [global]
-    memory mode = none
+    memory mode = ram
 [web]
-    mode = none
+    mode = multi-threaded
 [stream]
 	enabled = no
 EOF
