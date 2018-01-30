@@ -40,6 +40,9 @@ fi
 cd /
 rm -rf /netdata.git
 
+# install fping
+/usr/libexec/netdata/plugins.d/fping.plugin install
+
 dpkg -P zlib1g-dev uuid-dev libmnl-dev build-essential g++ gcc dpkg-dev make git autoconf autogen automake pkg-config
 apt-get -y autoremove
 apt-get clean
