@@ -1,29 +1,12 @@
 # netdata
 
-Dockerfile for building and running a netdata deamon for your host instance.
-
-Netdata monitors your server with thoughts of performance and memory usage, providing detailed insight into very recent server metrics. It's nice, and now it's also dockerized.
-
-More info about project: https://github.com/firehol/netdata
-
-# More info about me
-
-I'm primarily a full-stack web developer with strong knowledge of Docker, APIs, AWS, PHP, Go, Nginx+LUA, SQL and NoSQL databases, Video Streaming (Wowza Media Server), and handle DevOps/automation for several large scale international clients (High traffic/HA deployments).
-
-If you need someone with this skillset, please contact me at black@scene-si.org.
-
-I'm also the author of the following books:
-
-* [API Foundations in Go](https://leanpub.com/api-foundations)
-* [12 Factor Applications with Docker and Go](https://leanpub.com/12fa-docker-golang)
-
-For more information, I also write a development-themed blog at [scene-si.org](https://scene-si.org/).
-I occasionally tweet my pursuits (sometimes in Slovenian) on [@TitPetric](https://twitter.com/TitPetric).
+Dockerfile for building and running a netdata deamon for your host instance.  
+This image has `fireqos` and `fping` installed by default.
 
 # Using
 
 ```
-docker run -d --cap-add SYS_PTRACE \
+docker run -d --cap-add=SYS_PTRACE \
            -v /proc:/host/proc:ro \
            -v /sys:/host/sys:ro \
            -p 19999:19999 titpetric/netdata
@@ -33,26 +16,36 @@ Open a browser on http://server:19999/ and watch how your server is doing.
 
 # Supported tags and respective Dockerfile links
 
-* `titpetric/netdata:latest` [releases/latest/Dockerfile](https://github.com/titpetric/netdata/tree/master/releases/latest)
-* `titpetric/netdata:1.8` [releases/v1.8.0/Dockerfile](https://github.com/titpetric/netdata/tree/master/releases/v1.8.0)
-* `titpetric/netdata:1.7` [releases/v1.7.0/Dockerfile](https://github.com/titpetric/netdata/tree/master/releases/v1.7.0)
-* `titpetric/netdata:1.6` [releases/v1.6.0/Dockerfile](https://github.com/titpetric/netdata/tree/master/releases/v1.6.0)
-* `titpetric/netdata:1.5` [releases/v1.5.0/Dockerfile](https://github.com/titpetric/netdata/tree/master/releases/v1.5.0)
-* `titpetric/netdata:1.4` [releases/v1.4.0/Dockerfile](https://github.com/titpetric/netdata/tree/master/releases/v1.4.0)
+* `youyaochi/netdata:1.9` [releases/v1.9.0/Dockerfile](https://github.com/youyaochi/netdata/tree/master/releases/v1.9.0)
 
-The tags include builds of netdata, with the same tag in upstream. If there's some need to add older tags, you may
-use the provided `/releases` folder as reference, and add new tags as a PR. The `latest` tag is in line with the
-upstream and is occasionally prone to failure. As far as older tags go - they will inevitably lack some new features
-but should provide a more stable version to run.
+# Volume config folder
 
-> Developers note: new tags are not added automatically which means there might be some delay between when a new
-> release of netdata is available and when a new tag is available on docker hub - to add a new release yourself, the procedure is as follows:
->
-> 1. fork netdata repo,
-> 2. run /update-releases.sh,
-> 3. add, commit, push and submit a PR to `titpetric/netdata`
->
-> When you will submit a PR, I will also add the new version to the docker hub and thank you profusely.
+You can using environment variables to config netdata, but not all settings are available by env. To volume your config files, add this option:
+
+```
+-v /CONFIG_FOLDER_PATH:/etc/netdata/override
+```
+
+# fping 
+
+To enable `fping`, just volume your fping config file([ref](https://github.com/firehol/netdata/blob/master/conf.d/fping.conf)):
+
+```
+-v /CONFIG_FOLDER_PATH:/etc/netdata/override
+```
+
+
+# QoS
+
+To enable QoS, and get the right infomation you want(you do not just want monitor this netdata inner docker network interface, right?), `--network=host` and `‐‐cap‐add=NET_ADMIN` are both necessary.
+Then by referencing [Setup QoS, the right way!](https://github.com/firehol/netdata/wiki/You-should-install-QoS-on-all-your-servers#setup-qos-the-right-way), write your `fireqos.conf`.
+Finally volume your folder contains `fireqos.conf` at `/etc/fireqos`, with privileges:
+
+```
+-v /FIREQOS_FOLDER_PATH:/etc/fireqos --net=host ‐‐cap‐add NET_ADMIN
+```
+
+When you start this container, it will run `fireqos` first, then `netdata` should have `Quality of Service` menu.
 
 # Limiting IP netdata listens to
 
