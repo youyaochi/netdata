@@ -20,7 +20,7 @@ Open a browser on http://server:19999/ and watch how your server is doing.
 
 # Volume config folder
 
-You can using environment variables to config netdata, but not all settings are available by env. To volume your config files, add this option:
+You can using environment variables to config netdata, but not all settings are available by env. To volume your config files, volume at `/etc/netdata/override`:
 
 ```
 -v /CONFIG_FOLDER_PATH:/etc/netdata/override
@@ -37,8 +37,10 @@ To enable `fping`, just volume your fping config file([ref](https://github.com/f
 
 # QoS
 
-To enable QoS, and get the right infomation you want(you do not just want monitor this netdata inner docker network interface, right?), `--network=host` and `‐‐cap‐add=NET_ADMIN` are both necessary.
-Then by referencing [Setup QoS, the right way!](https://github.com/firehol/netdata/wiki/You-should-install-QoS-on-all-your-servers#setup-qos-the-right-way), write your `fireqos.conf`.
+To enable QoS, and get the right infomation you want(you do not just want monitor this netdata inner docker network interface, right?), `--network=host` and `‐‐cap‐add=NET_ADMIN` are both necessary.  
+
+Then by referencing [Setup QoS, the right way!](https://github.com/firehol/netdata/wiki/You-should-install-QoS-on-all-your-servers#setup-qos-the-right-way), write your `fireqos.conf`.  
+
 Finally volume your folder contains `fireqos.conf` at `/etc/fireqos`, with privileges:
 
 ```
